@@ -89,6 +89,7 @@ class RucioAdapter:
                 break
 
         if not sel_path:
+            print("Not at default", sorted(replica['pfns'].keys()))
             sel_path = sorted(replica['pfns'].keys())[-1]
 
         return prefix+sel_path

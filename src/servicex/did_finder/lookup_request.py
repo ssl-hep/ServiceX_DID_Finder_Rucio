@@ -70,18 +70,19 @@ class LookupRequest:
 
     def report_lookup_complete(self):
         elapsed_time = self.replica_lookup_complete - self.submited_time
-        self.servicex_adapter.put_fileset_complete(
-            {
-                "files": self.summary.files,
-                "files-skipped": self.summary.files_skipped,
-                "total-events": self.summary.total_events,
-                "total-bytes": self.summary.total_bytes,
-                "elapsed-time": int(elapsed_time.total_seconds())
-            }
-        )
+        if self.servicex_adapter:
+            self.servicex_adapter.put_fileset_complete(
+                {
+                    "files": self.summary.files,
+                    "files-skipped": self.summary.files_skipped,
+                    "total-events": self.summary.total_events,
+                    "total-bytes": self.summary.total_bytes,
+                    "elapsed-time": int(elapsed_time.total_seconds())
+                }
+            )
 
-        self.servicex_adapter.post_status_update("Fileset load complete in " + str(
-            self.replica_lookup_complete - self.submited_time))
+            self.servicex_adapter.post_status_update("Fileset load complete in " + str(
+                self.replica_lookup_complete - self.submited_time))
 
         print(self.summary)
         print("Complete time = ", self.replica_lookup_complete - self.submited_time)
@@ -92,6 +93,7 @@ class LookupRequest:
                 chunk = self.replica_lookup_queue.get_nowait()
                 tick = datetime.now()
                 replicas = list(self.rucio_adapter.find_replicas(chunk, self.site))
+                print("Replicas", replicas)
                 tock = datetime.now()
                 print("Read %d replicas in %s" % (len(replicas), str(tock-tick)))
 
@@ -110,7 +112,8 @@ class LookupRequest:
                             'file_path': sel_path
                         }
 
-                        self.servicex_adapter.put_file_add(data)
+                        if self.servicex_adapter:
+                            self.servicex_adapter.put_file_add(data)
 
                         if not sample_replica:
                             sample_replica = data
@@ -128,7 +131,8 @@ class LookupRequest:
 
                 with self.sample_submitted_lock:
                     if not self.sample_submitted:
-                        self.servicex_adapter.post_preflight_check(sample_replica)
+                        if self.servicex_adapter:
+                            self.servicex_adapter.post_preflight_check(sample_replica)
                         print("Submitted Sample file ", sample_replica)
                         self.sample_submitted = True
 

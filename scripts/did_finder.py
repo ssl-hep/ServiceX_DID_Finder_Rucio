@@ -50,7 +50,7 @@ parser.add_argument('--prefix', dest='prefix', action='store',
                     help='Prefix to add to Xrootd URLs')
 
 parser.add_argument('--rabbit-uri', dest="rabbit_uri", action='store',
-                    default='host.docker.internal')
+                    default=None)
 
 parser.add_argument('--threads', dest='threads', action='store',
                     default=10, type=int, help="Number of threads to spawn")
@@ -133,4 +133,19 @@ did_client = DIDClient()
 replica_client = ReplicaClient()
 rucio_adapter = RucioAdapter(did_client, replica_client)
 
-init_rabbit_mq(args.rabbit_uri, retries=12, retry_interval=10)
+if args.rabbit_uri:
+    init_rabbit_mq(args.rabbit_uri, retries=12, retry_interval=10)
+else:
+    lookup_request = LookupRequest(
+        request_id="request_id",
+        did="mc16_13TeV:mc16_13TeV.361106.PowhegPythia8EvtGen_AZNLOCTEQ6L1_Zee.deriv.DAOD_STDM3.e3601_e5984_s3126_r10201_r10210_p3975_tid20425969_00",
+        rucio_adapter=rucio_adapter,
+        servicex_adapter=None,
+        site=site,
+        prefix=prefix,
+        chunk_size=1,
+        threads=1
+    )
+
+    lookup_request.lookup_files()
+
