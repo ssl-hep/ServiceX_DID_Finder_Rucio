@@ -36,7 +36,6 @@ The server accepts the following arguments when it is launched
 |Argument       |Description                                                                |Default   |
 |---------------|---------------------------------------------------------------------------|----------|
 |`--rabbit-uri` | A valid URI to the RabbitMQ Broker                                        | None     |
-| `--site`      | Site to pass in to Rucio as a `client_location` property                  | None     |
 | `--prefix`    | A string to prepend on resulting file names. Useful to add xCache to URLs | ' '      |
 | `--threads`   | Number of threads to launch for retrieving replicas from Rucio            |  10      |
 
@@ -45,3 +44,5 @@ The server accepts the following arguments when it is launched
 The service requires a custom `rucio.cfg` which contains the CERN account name
 associated with the provided Certs. A template .cfg file is provided in this
 repo's `config` directory. Ordinarily this would be constructed by the helm chart.
+
+To get an optimal (usually closest) file replica, two environment variables have to be set: RUCIO_LATITUDE and RUCIO_LONGITUDE. This is normally done through helm chart values. 

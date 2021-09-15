@@ -43,9 +43,6 @@ from servicex.did_finder.servicex_adapter import ServiceXAdapter
 QUEUE_NAME = 'rucio_did_requests'
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--site', dest='site', action='store',
-                    default=None,
-                    help='XCache Site)')
 
 parser.add_argument('--prefix', dest='prefix', action='store',
                     default='',
@@ -76,7 +73,6 @@ def callback(channel, method, properties, body):
             did=did,
             rucio_adapter=rucio_adapter,
             servicex_adapter=servicex,
-            site=site,
             prefix=prefix,
             chunk_size=1000,
             threads=threads
@@ -123,12 +119,10 @@ def init_rabbit_mq(rabbitmq_url, retries, retry_interval):
 # Main Script
 args = parser.parse_args()
 
-site = args.site
 prefix = args.prefix
 threads = args.threads
 print("--------- ServiceX DID Finder ----------------")
 print("Threads: " + str(threads))
-print("Site: " + str(site))
 print("Prefix: " + str(prefix))
 
 did_client = DIDClient()

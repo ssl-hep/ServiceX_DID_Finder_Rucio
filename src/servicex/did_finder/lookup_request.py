@@ -35,12 +35,11 @@ from datetime import datetime
 
 
 class LookupRequest:
-    def __init__(self, request_id, did, rucio_adapter, servicex_adapter, site=None,
+    def __init__(self, request_id, did, rucio_adapter, servicex_adapter,
                  prefix='', chunk_size=1000, threads=1):
         self.request_id = request_id
         self.servicex_adapter = servicex_adapter
         self.did = did
-        self.site = site
         self.prefix = prefix
         self.rucio_adapter = rucio_adapter
 
@@ -95,7 +94,7 @@ class LookupRequest:
             try:
                 chunk = self.replica_lookup_queue.get_nowait()
                 tick = datetime.now()
-                replicas = list(self.rucio_adapter.find_replicas(chunk, self.site))
+                replicas = list(self.rucio_adapter.find_replicas(chunk))
                 tock = datetime.now()
                 self.__logger.info(f"Read {len(replicas)} replicas in {str(tock-tick)}")
 
@@ -104,7 +103,7 @@ class LookupRequest:
                 # sent.
                 sample_replica = None
                 for r in replicas:
-                    sel_path = RucioAdapter.get_sel_path(r, self.prefix, self.site)
+                    sel_path = RucioAdapter.get_sel_path(r, self.prefix)
                     if sel_path:
                         data = {
                             'req_id': self.request_id,
