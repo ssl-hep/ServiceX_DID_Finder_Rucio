@@ -30,9 +30,13 @@ from rucio.common.exception import DataIdentifierNotFound
 
 
 class RucioAdapter:
-    def __init__(self, did_client, replica_client):
+    def __init__(self, did_client, replica_client, prefix=None):
         self.did_client = did_client
         self.replica_client = replica_client
+        if prefix is None:
+            self.prefix = ""
+        else:
+            self.prefix = prefix
 
         # set logging to a null handler
         import logging
@@ -102,4 +106,4 @@ class RucioAdapter:
         if not sel_path:
             sel_path = sorted(replica['pfns'].keys())[-1]
 
-        return prefix+sel_path
+        return prefix + sel_path
