@@ -14,5 +14,10 @@ while true; do
 done
 
 export PYTHONPATH=./src
-python3 scripts/did_finder.py --rabbit-uri $RMQ_URI
+if [[ -z "$CACHE_PREFIX" ]];
+then
+  python3 scripts/did_finder.py --rabbit-uri $RMQ_URI
+else
+  python3 scripts/did_finder.py --rabbit-uri $RMQ_URI --prefix "$CACHE_PREFIX"
+fi
 
