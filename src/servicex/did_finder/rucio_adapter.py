@@ -131,7 +131,7 @@ class RucioAdapter:
                             'adler32': self.get_adler(f['hash']),
                             'file_size': int(f['size'], 10),
                             'file_events': 0,
-                            'file_path': self.prefix + self.get_paths(f['url'])
+                            'file_path': [self.prefix + elem for elem in self.get_paths(f['url'])]
                         }
                     )
             yield g_files
