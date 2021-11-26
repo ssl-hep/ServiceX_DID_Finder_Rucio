@@ -123,6 +123,7 @@ class RucioAdapter:
                 else:
                     mfile = d['metalink']['file']
                 for f in mfile:
+                    self.logger.info(f)
                     # Path is either a list of replicas or a single logical name
                     path = self.get_paths(f['url']) \
                         if not self.report_logical_files else \
