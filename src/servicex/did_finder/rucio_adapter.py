@@ -158,4 +158,5 @@ class RucioAdapter:
             yield g_files
 
         if no_replica_files > 0:
-            raise ValueError(f'Dataset {did} is missing replicas for {no_replica_files} of its files.')
+            raise ValueError(f'Dataset {did} is missing replicas for {no_replica_files} '
+                             'of its files.')
