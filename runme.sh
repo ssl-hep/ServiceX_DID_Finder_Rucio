@@ -12,7 +12,7 @@ while true; do
     echo "INFO $INSTANCE_NAME did-finder none Waiting for the proxy."
     sleep 5
 done
-
+rucio -v whoami
 if [ -z $CACHE_PREFIX ]; then export PREFIX_ARG=""; else export PREFIX_ARG="--prefix $CACHE_PREFIX"; fi
 export PYTHONPATH=./src
 
